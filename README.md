@@ -163,8 +163,10 @@ npm  run  dev
 
   
 
-**Live Application**: [Add your deployment URL here]
-
+**Live Application**: https://jassignment1-phurtenjangsherpa.onrender.com
+- Login credentials:
+  username: admin
+  password: phurten
   
 
 The application is deployed on Render and connected to MongoDB Atlas.
