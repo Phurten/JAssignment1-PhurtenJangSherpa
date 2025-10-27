@@ -1,0 +1,180 @@
+extends ../common/admin-layout
+
+block layout-content 
+  .main-content.admin-blogs
+    .page-header
+      h1.page-title Blogs Management
+      button-secondary.btn.btn-success(onclick="openModal('addBlogModal')") Add New Blog
+    
+    if error
+      .alert.alert-error #{error}
+    
+    if blogs && blogs.length > 0
+      .admin-table
+        table
+          thead
+            tr
+              th Title
+              th Category
+              th Author
+              th Read Time
+              th Created
+              th Actions
+          tbody
+            each blog in blogs
+              tr
+                td
+                  strong #{blog.title}
+                  if blog.imageUrl
+                    br
+                    small.text-muted Has image
+                  if blog.content
+                    br
+                    small.text-muted #{blog.content.substring(0, 60)}...
+                td #{blog.category || '-'}
+                td #{blog.author || '-'}
+                td
+                  if blog.readTime
+                    | #{blog.readTime} min
+                  else
+                    | -
+                td #{blog.createdAt.toDateString()}
+                td.actions
+                  div.operations
+                    button.btn.btn-icon.btn-primary(onclick="openEditModal('editBlogModal', '" + blog._id + "')", title="Edit blog")
+                      i.ph.ph-pencil-simple
+                    a.btn.btn-icon.btn-danger(href="/admin/blogs/delete/" + blog._id, onclick="return confirm('Are you sure you want to delete this blog?')", title="Delete blog")
+                      i.ph.ph-trash-simple
+    else
+      .empty-state
+        p No blogs found. 
+        button.btn.btn-primary(onclick="openModal('addBlogModal')") Add your first blog →
+
+  //add blog modal
+  .modal-overlay#addBlogModal
+    .modal
+      .modal-header
+        h2.modal-title Add New Blog
+        button.modal-close ×
+      .modal-body
+        form.modal-form(action="/admin/blogs/add", method="post", enctype="multipart/form-data")
+          .form-group
+            label(for="title") Blog Title *
+            input(type="text", id="title", name="title", required)
+          
+          .form-group
+            label(for="content") Content *
+            textarea(id="content", name="content", rows="8", required)
+          
+          .form-row
+            .form-group
+              label(for="imageFile") Upload Image
+              input(type="file", id="imageFile", name="imageFile", accept="image/*")
+            .form-group
+              label(for="imageUrl") OR Image URL
+              input(type="url", id="imageUrl", name="imageUrl", placeholder="https://example.com/image.jpg")
+          
+          .form-group
+            label(for="author") Author
+            input(type="text", id="author", name="author")
+          
+          .form-group
+            label(for="category") Category
+            select(id="category", name="category")
+              option(value="") Select category
+              option(value="Technology") Technology
+              option(value="Web Development") Web Development
+              option(value="Programming") Programming
+              option(value="Design") Design
+              option(value="Career") Career
+              option(value="Tutorial") Tutorial
+              option(value="Other") Other
+          
+          .form-group
+            label(for="tags") Tags (comma separated)
+            input(type="text", id="tags", name="tags", placeholder="javascript, web-dev, tutorial")
+          
+          .form-group
+            label(for="readTime") Read Time (minutes)
+            input(type="number", id="readTime", name="readTime", min="1")
+          
+          .modal-footer
+            button.btn.btn-secondary(type="button", onclick="modal.close()") Cancel
+            button.btn.btn-primary(type="submit") Add Blog
+
+  //edit blog modal
+  .modal-overlay#editBlogModal
+    .modal
+      .modal-header
+        h2.modal-title Edit Blog
+        button.modal-close ×
+      .modal-body
+        form.modal-form(id="editBlogForm", method="post", enctype="multipart/form-data")
+          .form-group
+            label(for="edit-blog-title") Blog Title *
+            input(type="text", id="edit-blog-title", name="title", required)
+          
+          .form-group
+            label(for="edit-blog-content") Content *
+            textarea(id="edit-blog-content", name="content", rows="8", required)
+          
+          .form-row
+            .form-group
+              label(for="edit-imageFile") Upload New Image
+              input(type="file", id="edit-imageFile", name="imageFile", accept="image/*")
+            .form-group
+              label(for="edit-blog-imageUrl") OR Image URL
+              input(type="url", id="edit-blog-imageUrl", name="imageUrl", placeholder="https://example.com/image.jpg")
+          
+          .form-group
+            label(for="edit-blog-author") Author
+            input(type="text", id="edit-blog-author", name="author")
+          
+          .form-group
+            label(for="edit-blog-category") Category
+            select(id="edit-blog-category", name="category")
+              option(value="") Select category
+              option(value="Technology") Technology
+              option(value="Web Development") Web Development
+              option(value="Programming") Programming
+              option(value="Design") Design
+              option(value="Career") Career
+              option(value="Tutorial") Tutorial
+              option(value="Other") Other
+          
+          .form-group
+            label(for="edit-blog-tags") Tags (comma separated)
+            input(type="text", id="edit-blog-tags", name="tags", placeholder="javascript, web-dev, tutorial")
+          
+          .form-group
+            label(for="edit-blog-readTime") Read Time (minutes)
+            input(type="number", id="edit-blog-readTime", name="readTime", min="1")
+          
+          .modal-footer
+            button.btn.btn-secondary(type="button", onclick="modal.close()") Cancel
+            button.btn.btn-primary(type="submit") Update Blog
+
+  script.
+    //blogs data for modals
+    const blogsData = !{JSON.stringify(blogs || [])};
+    
+    //function to open edit modal with blog data
+    function openEditModal(modalId, blogId) {
+      const blog = blogsData.find(b => b._id === blogId);
+      if (!blog) return;
+      
+      //populate form fields
+      document.getElementById('edit-blog-title').value = blog.title || '';
+      document.getElementById('edit-blog-content').value = blog.content || '';
+      document.getElementById('edit-blog-author').value = blog.author || '';
+      document.getElementById('edit-blog-category').value = blog.category || '';
+      document.getElementById('edit-blog-tags').value = blog.tags ? blog.tags.join(', ') : '';
+      document.getElementById('edit-blog-imageUrl').value = blog.imageUrl || '';
+      document.getElementById('edit-blog-readTime').value = blog.readTime || '';
+      
+      //setting form action
+      document.getElementById('editBlogForm').action = `/admin/blogs/edit/${blogId}`;
+      
+      //open modal
+      openModal(modalId);
+    }

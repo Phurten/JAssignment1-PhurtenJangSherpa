@@ -1,0 +1,45 @@
+doctype html 
+html 
+  head
+    meta(charset="utf-8") 
+    title Portfolio Admin
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap", rel="stylesheet")
+    script(src="https://unpkg.com/@phosphor-icons/web")
+    link(rel="stylesheet", href="/css/styles.css")
+    script(src="/js/modal.js")
+  body.admin-body
+    //top header
+    header#admin-header 
+      .header-spacer
+      .header-actions
+        if (user)
+          a.account-btn(href="/user") About
+          a.logout-btn(href="/logout") Logout 
+        else 
+          a(href="/login") Login
+    
+    .admin-layout
+      //left sidebar navigation
+      aside#admin-sidebar 
+        .sidebar-logo
+          h2
+            a(href="/admin") PhurAdmin.
+        nav.sidebar-nav(aria-label="Admin navigation")
+          ul 
+            li
+              a(href="/admin", class=(currentPage === 'dashboard' ? 'active' : '')) Dashboard
+            li
+              a(href="/admin/projects", class=(currentPage === 'projects' ? 'active' : '')) Projects
+            li
+              a(href="/admin/skills", class=(currentPage === 'skills' ? 'active' : '')) Skills
+            li
+              a(href="/admin/blogs", class=(currentPage === 'blogs' ? 'active' : '')) Blogs
+        
+        .sidebar-footer
+          div &copy; Copyright 2025 Phurten Jang.
+      
+      //main content area
+      main#admin-main
+        block layout-content

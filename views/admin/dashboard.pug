@@ -1,0 +1,31 @@
+extends ../common/admin-layout
+
+block layout-content 
+  .main-content.admin-dashboard
+    h1.page-title Admin Dashboard
+    
+    if error
+      .alert.alert-error #{error}
+    
+    .dashboard-stats
+      a.stat-card(href="/admin/projects")
+        h3 Projects
+        p.stat-number #{projectCount || 0}
+      
+      a.stat-card(href="/admin/skills")
+        h3 Skills  
+        p.stat-number #{skillCount || 0}
+      
+      a.stat-card(href="/admin/blogs")
+        h3 Blogs
+        p.stat-number #{blogCount || 0}
+    
+    .quick-actions
+      h2 Quick Actions
+      .action-buttons
+        button.btn.btn-success(onclick="navigateAndOpenModal('/admin/projects', 'addProjectModal')") Add New Project
+        button.btn.btn-success(onclick="navigateAndOpenModal('/admin/skills', 'addSkillModal')") Add New Skill
+        button.btn.btn-success(onclick="navigateAndOpenModal('/admin/blogs', 'addBlogModal')") Add New Blog
+        a.btn.btn-info(href="/projects") View Projects API
+        a.btn.btn-info(href="/skills") View Skills API
+        a.btn.btn-info(href="/blogs") View Blogs API
