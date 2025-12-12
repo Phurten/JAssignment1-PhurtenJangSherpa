@@ -3,6 +3,7 @@ import express from "express";
 import path from "path"; //needed when setting up static/file paths
 import sessions from "express-session";
 import { connect } from "./db.js";
+import cors from "cors";
 
 //import routers
 import userRouter from "./components/User/routes.js";
@@ -41,6 +42,8 @@ app.set("view engine", "pug");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use(cors());
 
 //set up folder for static files
 app.use(express.static(path.join(__dirname, "public")));

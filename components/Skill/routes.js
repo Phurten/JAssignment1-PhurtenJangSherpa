@@ -14,6 +14,7 @@ const requireAuth = (request, response, next) => {
 
 //json api routes (public)
 router.get("/skills", skillController.getSkillsJSON);
+router.get("/api/skills", skillController.getSkillsJSON);
 
 //admin routes (protected)
 router.get("/admin/skills", requireAuth, skillController.getAllSkills);

@@ -41,6 +41,7 @@ const requireAuth = (request, response, next) => {
 
 // JSON API Routes (public)
 router.get("/projects", projectController.getProjectsJSON);
+router.get("/api/projects", projectController.getProjectsJSON);
 
 // Admin Routes (protected)
 router.get("/admin/projects", requireAuth, projectController.getAllProjects);

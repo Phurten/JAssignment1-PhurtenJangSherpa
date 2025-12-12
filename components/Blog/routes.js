@@ -41,6 +41,7 @@ const requireAuth = (request, response, next) => {
 
 //json api routes 
 router.get("/blogs", getBlogsJSON);
+router.get("/api/blogs", getBlogsJSON);
 
 //admin routes (protected)
 router.get("/admin/blogs", requireAuth, getBlogs);
